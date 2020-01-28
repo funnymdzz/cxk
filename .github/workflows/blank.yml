@@ -1,0 +1,21 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Run a one-line script
+      run: echo Hello, world!
+    - name: Run a multi-line script
+      run: |
+        git clone https://github.com/AndreRH/hangover --depth=1
+        cd hangover
+        git submodule init
+        git submodule update
+        docker build -f Dockerfile.android -t hob ./
+        docker run --rm hob tar -C /root/hangover/build.android/wine-host/dlls/wineandroid.drv/ -cf - hangover-debug.apk | tar -xvf -
